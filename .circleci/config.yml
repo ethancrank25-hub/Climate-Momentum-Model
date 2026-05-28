@@ -1,61 +1,48 @@
 version: 2.1
+
 jobs:
   data-prep:
     docker:
       - image: cimg/base:stable
-
     steps:
       - checkout
-
       - run:
-          name: Install dependencies (if needed)
-          command: |
-            echo "Installing base dependencies..."
-            sudo apt-get update || true
-
-      - run:
-          name: Plan a deploy
-          command: |
-            circleci run release plan \
-              --environment-name="Development" \
-              --component-name="Main Data Pipeline" \
-              --target-version="v1.0.0"
-
-      - run:
-          name: Run Data Prep Pipeline
+          name: Data Prep
           command: |
             echo "Running data prep..."
             sleep 5
-            echo "Data prep complete"
+            echo "Data prep done"
 
+  forecasting:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
       - run:
-          name: Mark deployment SUCCESS
-          command: circleci run release update --status=SUCCESS
-          when: on_success
-
-      - run:
-          name: Mark deployment FAILED
-          command: circleci run release update --status=FAILED
-          when: on_fail
+          name: Forecasting
+          command: |
+            echo "Running forecasting..."
+            sleep 5
+            echo "Forecasting done"
 
   deploy:
     docker:
       - image: cimg/base:stable
-
     steps:
       - checkout
-
       - run:
-          name: Deploy application
+          name: Deploy
           command: |
-            echo "Deploying application..."
+            echo "Deploying..."
             sleep 3
-            echo "Deployment complete"
+            echo "Deploy complete"
 
 workflows:
-  data-prep-workflow:
+  main:
     jobs:
       - data-prep
-      - deploy:
-          requires:
-            - data-prep
+      - forecasting
+	    - 5-year-prediction
+	    - reporting
+    	- Long-Term-Data-Archive
+      - deploy
