@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  deploy:
+  data-prep:
     docker:
       - image: cimg/base:stable
 
@@ -8,29 +8,42 @@ jobs:
       - checkout
 
       - run:
+          name: Install dependencies (if needed)
+          command: |
+            echo "Installing base dependencies..."
+            sudo apt-get update || true
+
+      - run:
           name: Plan a deploy
           command: |
             circleci run release plan \
               --environment-name="Development" \
               --component-name="Main Data Pipeline" \
-              --target-version="<some-version-name>"
-
-      # Your actual deployment step would go here
-      - run:
-          name: Deploy application
-          command: echo "Deploying..."
+              --target-version="v1.0.0"
 
       - run:
-          name: Update deployment SUCCESS
-          command: circleci run release update --status=SUCCESS
+          name: Run Data Prep Pipeline (actual deployment work)
+          command: |
+            echo "Running data prep..."
+            # Replace this with your real script, e.g.:
+            # python scripts/data_prep.py
+            # or npm run data-prep
+            sleep 5
+            echo "Data prep complete"
+
+      - run:
+          name: Mark deployment SUCCESS
+          command: |
+            circleci run release update --status=SUCCESS
           when: on_success
 
       - run:
-          name: Update planned deploy to FAILED
-          command: circleci run release update --status=FAILED
+          name: Mark deployment FAILED
+          command: |
+            circleci run release update --status=FAILED
           when: on_fail
 
 workflows:
-  deploy_workflow:
+  data-prep-workflow:
     jobs:
-      - deploy
+      - data-prep
