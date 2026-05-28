@@ -1,5 +1,4 @@
 version: 2.1
-
 jobs:
   data-prep:
     docker:
@@ -42,7 +41,7 @@ workflows:
     jobs:
       - data-prep
       - forecasting
-	    - 5-year-prediction
-	    - reporting
-    	- Long-Term-Data-Archive
+	  - 5-year-prediction
+	  - reporting
+      - Long-Term-Data-Archive
       - deploy
