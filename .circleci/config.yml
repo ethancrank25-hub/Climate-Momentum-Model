@@ -10,7 +10,7 @@ jobs:
           command: |
             echo "Running data prep..."
             sleep 5
-            echo "Data prep done"
+            echo "Data prep complete"
 
   forecasting:
     docker:
@@ -22,20 +22,8 @@ jobs:
           command: |
             echo "Running forecasting..."
             sleep 5
-            echo "Forecasting done"
+            echo "Forecasting complete"
 
-  5-year-prediction:
-   docker:
-    - image: cimg/base:stable
-  steps:
-   - checkout
-   - run:
-       name: 5-year-prediction
-       command: |
-         echo "Running 5 Year Prediction..."
-         sleep 5
-         echo "5 Year Prediction done"
-  
   deploy:
     docker:
       - image: cimg/base:stable
@@ -44,16 +32,19 @@ jobs:
       - run:
           name: Deploy
           command: |
-            echo "Deploying..."
+            echo "Deploying application..."
             sleep 3
             echo "Deploy complete"
 
 workflows:
-  main:
+  data-prep-pipeline:
     jobs:
       - data-prep
+
+  forecasting-pipeline:
+    jobs:
       - forecasting
-      - 5 year prediction
-      - reporting
-      - long-Term-Data-Archive
+
+  deploy-pipeline:
+    jobs:
       - deploy
