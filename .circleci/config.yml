@@ -1,25 +1,37 @@
   version: 2.1
-    jobs:
-     - build:
-     - docker:
-     - deploy:
-       - image: cimg/base:stable 
-        steps:
-         - checkout
 
-- run:
-    name: Plan a deploy
-    command: |
-      circleci run release plan \
-        --environment-name="Development" \
-        --component-name="Main Data Pipeline" \
-        --target-version="<some-version-name>"
-# Your job here doing the actual deployment
-- run:
-    name: Update a deploy to SUCCESS
-    command: circleci run release update --status=SUCCESS 
-    when: on_success 
-- run:
-    name: Update planned deploy to FAILED
-    command: circleci run release update --status=FAILED 
-    when: on_fail
+jobs:
+  deploy:
+    docker:
+      - image: cimg/base:stable
+
+    steps:
+      - checkout
+
+      - run:
+          name: Plan a deploy
+          command: |
+            circleci run release plan \
+              --environment-name="Development" \
+              --component-name="Main Data Pipeline" \
+              --target-version="<some-version-name>"
+
+      # Your actual deployment step would go here
+      - run:
+          name: Deploy application
+          command: echo "Deploying..."
+
+      - run:
+          name: Update a deploy to SUCCESS
+          command: circleci run release update --status=SUCCESS
+          when: on_success
+
+      - run:
+          name: Update planned deploy to FAILED
+          command: circleci run release update --status=FAILED
+          when: on_fail
+
+workflows:
+  deploy_workflow:
+    jobs:
+      - deploy
