@@ -41,7 +41,7 @@ workflows:
     jobs:
       - data-prep
       - forecasting
-	  - 5-year-prediction
-	  - reporting
-	  - Long-Term-Data-Archive
+      - 5-year-prediction
+      - reporting
+      - long-Term-Data-Archive
 	  - deploy
