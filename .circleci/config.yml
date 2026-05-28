@@ -21,7 +21,7 @@ jobs:
           command: echo "Deploying..."
 
       - run:
-          name: Update a deploy to SUCCESS
+          name: Update deployment SUCCESS
           command: circleci run release update --status=SUCCESS
           when: on_success
 
