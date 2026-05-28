@@ -22,28 +22,40 @@ jobs:
               --target-version="v1.0.0"
 
       - run:
-          name: Run Data Prep Pipeline (actual deployment work)
+          name: Run Data Prep Pipeline
           command: |
             echo "Running data prep..."
-            # Replace this with your real script, e.g.:
-            # python scripts/data_prep.py
-            # or npm run data-prep
             sleep 5
             echo "Data prep complete"
 
       - run:
           name: Mark deployment SUCCESS
-          command: |
-            circleci run release update --status=SUCCESS
+          command: circleci run release update --status=SUCCESS
           when: on_success
 
       - run:
           name: Mark deployment FAILED
-          command: |
-            circleci run release update --status=FAILED
+          command: circleci run release update --status=FAILED
           when: on_fail
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+
+    steps:
+      - checkout
+
+      - run:
+          name: Deploy application
+          command: |
+            echo "Deploying application..."
+            sleep 3
+            echo "Deployment complete"
 
 workflows:
   data-prep-workflow:
     jobs:
       - data-prep
+      - deploy:
+          requires:
+            - data-prep
