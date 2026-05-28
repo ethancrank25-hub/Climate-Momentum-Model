@@ -24,6 +24,18 @@ jobs:
             sleep 5
             echo "Forecasting done"
 
+  5-year-prediction:
+   docker:
+    - image: cimg/base:stable
+  steps:
+   - checkout
+   - run:
+       name: 5-year-prediction
+       command: |
+         echo "Running 5 Year Prediction..."
+         sleep 5
+         echo "5 Year Prediction done"
+  
   deploy:
     docker:
       - image: cimg/base:stable
