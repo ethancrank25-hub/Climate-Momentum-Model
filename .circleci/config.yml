@@ -43,5 +43,5 @@ workflows:
       - forecasting
 	  - 5-year-prediction
 	  - reporting
-      - Long-Term-Data-Archive
-      - deploy
+	  - Long-Term-Data-Archive
+	  - deploy
